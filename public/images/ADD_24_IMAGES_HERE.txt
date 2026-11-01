@@ -1,0 +1,7 @@
+Put the 24 full-screen images in this folder, named:
+animation-02.jpg
+animation-03.jpg
+...
+animation-25.jpg
+
+You can use .png or .webp instead, but update the image filenames/extensions in src/animations.js. Images use object-fit: cover to fill the entire screen, so some edges may be cropped depending on the image's aspect ratio.

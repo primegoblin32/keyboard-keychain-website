@@ -3,5 +3,6 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/keyboard-keychain-website/',
+  // Relative paths work on localhost and on GitHub Pages project sites.
+  base: './',
 })

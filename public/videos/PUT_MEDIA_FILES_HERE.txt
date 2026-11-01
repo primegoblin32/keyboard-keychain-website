@@ -1,0 +1,4 @@
+Place your 25 MP4 files in this folder:
+animation-01.mp4 through animation-25.mp4
+
+Each MP4 should include its own audio. Use H.264 video + AAC audio for broad browser support.
