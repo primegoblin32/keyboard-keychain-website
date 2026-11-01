@@ -1,7 +1,7 @@
-
 import { useEffect, useRef, useState } from 'react'
 import { ANIMATION_ONE_VIDEOS, animations, GRID_SIZE } from './animations.js'
 
+const COLORS = ['Black', 'White', 'Silver', 'Orange', 'Blue']
 const VIDEO_FOLDER = `${import.meta.env.BASE_URL}videos/`
 const IMAGE_FOLDER = `${import.meta.env.BASE_URL}images/`
 const SOUNDS = Array.from({ length: 15 }, (_, index) => {
@@ -29,6 +29,7 @@ export default function App() {
   const [selectedVideo, setSelectedVideo] = useState(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [mediaError, setMediaError] = useState(false)
+  const [displayedImageSrc, setDisplayedImageSrc] = useState(null)
 
   const videoRef = useRef(null)
   const previousIndexRef = useRef(0)
@@ -36,12 +37,15 @@ export default function App() {
   const currentIndex = row * GRID_SIZE + column
   const current = animations[currentIndex]
 
+  const keycapColor = COLORS[column]
+  const baseColor = COLORS[row]
+
   const imageSrc = `${IMAGE_FOLDER}${current.image}`
 
   const videoSrc = selectedVideo
     ? `${VIDEO_FOLDER}${selectedVideo}`
     : null
-
+    
   // Reset Animation 1 whenever the visitor returns to it.
   useEffect(() => {
     if (currentIndex === 0 && previousIndexRef.current !== 0) {
@@ -65,6 +69,40 @@ export default function App() {
       setIsPlaying(false)
     })
   }, [isPlaying, videoSrc])
+
+  // Preload all 25 images when the website starts.
+  useEffect(() => {
+    animations.forEach((animation) => {
+      if (!animation.image) return
+
+      const image = new Image()
+      image.src = `${IMAGE_FOLDER}${animation.image}`
+    })
+  }, [])
+
+  // Keep the previous image visible until the next one loads.
+  useEffect(() => {
+    let cancelled = false
+    const image = new Image()
+
+    image.onload = () => {
+      if (!cancelled) {
+        setDisplayedImageSrc(image.src)
+      }
+    }
+
+    image.onerror = () => {
+      if (!cancelled) {
+        setMediaError(true)
+      }
+    }
+
+    image.src = imageSrc
+
+    return () => {
+      cancelled = true
+    }
+  }, [imageSrc])
 
   function toggleVideo() {
     if (isPlaying) {
@@ -97,29 +135,39 @@ export default function App() {
         <div className="nav-stack" aria-label="Previous navigation">
           <button
             className="nav-arrow"
+            data-tooltip="Previous Keycap color"
             type="button"
             onClick={() => {
               playRandomSound()
               moveRow(-1)
             }}
-            aria-label="Previous vertical position"
+            aria-label="Previous Keycap color"
           >
             <span aria-hidden="true">←</span>
           </button>
           <button
             className="nav-arrow"
+            data-tooltip="Previous Base color"
             type="button"
             onClick={() => {
               playRandomSound()
               moveColumn(-1)
             }}
-            aria-label="Previous vertical position"
+            aria-label="Previous Base color"
           >
             <span aria-hidden="true">←</span>
           </button>
         </div>
 
-        <div className="stage">
+        <div
+          className="stage"
+          style={{
+            backgroundImage: `url("${IMAGE_FOLDER}background.png")`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+          >
           {currentIndex === 0 && isPlaying ? (
             <video
               ref={videoRef}
@@ -135,13 +183,11 @@ export default function App() {
               }}
             />
           ) : (
-            <img
-              key={imageSrc}
-              className="animation"
-              src={imageSrc}
-              alt={current.title}
-              onError={() => setMediaError(true)}
-            />
+          <img
+            className="animation"
+            src={displayedImageSrc || imageSrc}
+            alt={current.title}
+          />
           )}
           {mediaError && (
             <div className="message">
@@ -155,18 +201,20 @@ export default function App() {
         <div className="nav-stack" aria-label="Next navigation">
           <button
             className="nav-arrow"
+            data-tooltip="Next Keycap color"
             type="button"
             onClick={() => {
               playRandomSound()
               moveRow(1)
             }}
-            aria-label="Previous vertical position"
+            aria-label="Next Keycap color"
           >
             <span aria-hidden="true">→</span>
           </button>
 
           <button
             className="nav-arrow"
+            data-tooltip="Next Base color"
             type="button"
             onClick={() => {
               playRandomSound()
@@ -190,10 +238,8 @@ export default function App() {
       )}
 
       <footer className="caption">
-        <span>{current.title}</span>
-        <span className="counter">
-          {String(currentIndex + 1).padStart(2, '0')} / 25
-        </span>
+        <span>{baseColor} Keycaps</span>
+        <span>{keycapColor} Base</span>
       </footer>
     </main>
   )
