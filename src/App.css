@@ -122,10 +122,10 @@ button { font: inherit; }
   .nav-arrow span { font-size: 29px; }
   .caption { bottom: max(8px, env(safe-area-inset-bottom)); font-size: .74rem; }
   .animation {
-    width: 85%;
+    width: 100%;
     height: 100%;
     margin: auto;
-    object-fit: contain;
+    object-fit: cover;
     object-position: center;
   }
 }
