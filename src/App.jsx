@@ -70,20 +70,12 @@ export default function App() {
     })
   }, [isPlaying, videoSrc])
 
-  // Preload all 25 images when the website starts.
-  useEffect(() => {
-    animations.forEach((animation) => {
-      if (!animation.image) return
-
-      const image = new Image()
-      image.src = `${IMAGE_FOLDER}${animation.image}`
-    })
-  }, [])
-
-  // Keep the previous image visible until the next one loads.
+  // Load the selected image and handle loading errors.
   useEffect(() => {
     let cancelled = false
     const image = new Image()
+
+    setMediaError(false)
 
     image.onload = () => {
       if (!cancelled) {
