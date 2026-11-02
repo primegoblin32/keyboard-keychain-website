@@ -116,12 +116,11 @@ button { font: inherit; }
 
 @media (max-width: 600px) {
   .nav-stack { height: clamp(104px, 20vh, 148px); }
-  .nav-stack:first-child { left: 12px; }
-  .nav-stack:last-child { right: 12px; }
+  .nav-stack:first-child { left: 7px; }
+  .nav-stack:last-child { right: 7px; }
   .nav-arrow { width: 38px; height: 38px; }
   .nav-arrow span { font-size: 29px; }
   .caption { bottom: max(8px, env(safe-area-inset-bottom)); font-size: .74rem; }
-  .animation {width: 60%; height: 60%;margin: auto;}
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
