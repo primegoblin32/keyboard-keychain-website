@@ -124,12 +124,12 @@ button { font: inherit; }
   .nav-stack:first-child {
     left: 50%;
     right: auto;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
   }
   .nav-stack:last-child {
     right: 50%;
     left: auto;
-    transform: translate(50%, -50%);
+    transform: translateY(-50%);
   }
   .nav-arrow { width: 38px; height: 38px; }
   .nav-arrow span { font-size: 29px; }
